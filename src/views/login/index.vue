@@ -14,7 +14,7 @@
           ref="username"
           v-model="loginForm.username"
           placeholder="Username"
-          name="username"
+          name="username" 
           type="text"
           tabindex="1"
           auto-complete="on"
