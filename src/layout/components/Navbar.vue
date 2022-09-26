@@ -9,7 +9,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="http://destiny001.gitee.io/image/monkey_02.jpg" class="user-avatar">
+          <img v-imgerror="defaultImg" :src="staffPhoto" class="user-avatar">
           <span>用户名</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -20,7 +20,7 @@
             </el-dropdown-item>
           </router-link>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;" @click="btn">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -32,16 +32,24 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import defaultImg from '@/assets/common/head.jpg'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Hamburger,
+  },
+  data() {
+    return {
+      defaultImg
+      // defaultImg:'/assets/common/head.jpg'
+    };
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -51,6 +59,10 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    btn() {
+      this.$store.state.commit('user/loginAction','')
+      this.$router.push('/login')
     }
   }
 }

@@ -20,7 +20,7 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    AppMain
+    AppMain,
   },
   mixins: [ResizeMixin],
   computed: {
@@ -41,6 +41,9 @@ export default {
         mobile: this.device === 'mobile'
       }
     }
+  },
+   created() {
+     this.$store.dispatch('user/UserInfoAPI')
   },
   methods: {
     handleClickOutside() {
