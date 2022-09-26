@@ -5,11 +5,7 @@ import SvgIcon from '@/components/SvgIcon'// svg component
 Vue.component('svg-icon', SvgIcon)
 
 const req = require.context('./svg', false, /\.svg$/)
-console.log(req)
-console.log(req.keys())
-console.log(req('./dashboard.svg'))
-// map返回一个新数组
-// 长度和原来的一样
+// console.log(req)
+// console.log(req.keys())
 const requireAll = requireContext => requireContext.keys().map(requireContext)
 requireAll(req)
-console.log(requireAll(req))

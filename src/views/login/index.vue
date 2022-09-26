@@ -1,18 +1,51 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" class="login-form" auto-complete="on" label-position="left">
+    <el-form
+      ref="loginForm"
+      :model="loginFrom"
+      :rules="rules"
+      class="login-form"
+      auto-complete="on"
+      label-position="left"
+    >
       <div class="title-container">
         <h3 class="title">
-          <img src="@/assets/common/login-logo.png" alt="">
+          <img src="@/assets/common/login-logo.png" alt="" />
         </h3>
       </div>
 
-      <el-button class="loginBtn" style="width:100%;margin-bottom:30px;">Login</el-button>
+      <el-form-item prop="mobile">
+        <span class="svg-container el-icon-user-solid" />
+        <el-input v-model="loginFrom.mobile" placeholder="请输入手机号码" />
+      </el-form-item>
+      <el-form-item prop="password">
+        <span class="svg-container">
+          <svg-icon icon-class="password" />
+        </span>
+        <el-input
+          v-model="loginFrom.password"
+          ref="pwd"
+          :type="passwordType"
+          placeholder="请输入密码"
+        />
+        <span class="svg-container" @click="showPwd">
+          <svg-icon
+            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+          />
+        </span>
+      </el-form-item>
+
+      <el-button
+        class="loginBtn"
+        style="width: 100%; margin-bottom: 30px"
+        :loading="loading"
+        @click="qunimade"
+        >登录</el-button
+      >
       <div class="tips">
-        <span style="margin-right:20px;">账号: 13800000002</span>
+        <span style="margin-right: 20px">账号: 13800000002</span>
         <span> 密码: 123456</span>
       </div>
-
     </el-form>
   </div>
   <!-- 环境变量的作用
@@ -23,24 +56,69 @@
    -->
 </template>
 <script>
+import { validMobile } from "@/utils/validate";
 export default {
-  name: 'Login',
   data() {
+    const phonevalid = (rules, value, callback) => {
+      if (!validMobile(value)) {
+        callback(new Error("格式错误"));
+      } else {
+        callback();
+      }
+    };
     return {
-    }
+      passwordType: "password",
+      loginFrom: {
+        password: "",
+        mobile: "",
+      },
+      loading: false,
+      rules: {
+        mobile: [
+          { required: true, message: "手机号必填", trigger: "blur" },
+          { validator: phonevalid, message: "手机号格式错误", trigger: "blur" },
+        ],
+        passwords: [
+          { required: true, message: "密码必填", trigger: "blur" },
+          { min: 6, max: 16, message: "密码格式不对", trigger: "blur" },
+        ],
+      },
+    };
+  },
+  created() {
+    this.qunimade();
   },
   methods: {
-  }
-}
+    showPwd() {
+      this.passwordType === "password"
+        ? (this.passwordType = "")
+        : (this.passwordType = "password");
+      this.$nextTick(() => {
+        this.$refs.pwd.focus();
+      });
+    },
+    async qunimade() {
+      try {
+        await this.$refs.loginForm.validate();
+        this.loading = true;
+        await this.$store.dispatch("user/loginAction",(this.loginFrom));
+        this.$router.push("/");
+      } catch (err) {
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss">
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
-$bg:#283443;
-$light_gray:#68b0fe;
-$cursor: #fff;
+$bg: #d1e2ff;
+$light_gray: #fff;
+$cursor: #000;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
   .login-container .el-input input {
@@ -50,8 +128,9 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  background-image: url('~@/assets/common/login.jpg'); // 设置背景图片
+  background-image: url("~@/assets/common/login.jpg"); // 设置背景图片
   background-position: center; // 将图片位置设置为充满整个屏幕
+
   .el-input {
     display: inline-block;
     height: 47px;
@@ -63,7 +142,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: #000;
       height: 47px;
       caret-color: $cursor;
 
@@ -81,9 +160,7 @@ $cursor: #fff;
     color: #454545;
     background: rgba(255, 255, 255, 0.7); // 输入登录表单的背景色
   }
-  .el-form-item__error {
-    color: #fff
-  }
+
   .loginBtn {
     background: #407ffe;
     height: 64px;
@@ -91,14 +168,21 @@ $cursor: #fff;
     font-size: 24px;
   }
 
+  .loginBtn {
+    border: 0;
+    color: #fff;
+  }
 }
 </style>
 
 <style lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#68b0fe;
+$bg: #d1e2ff;
+$dark_gray: #889aa4;
+$light_gray: #68b0fe;
 
+.el-form-item__error {
+  color: red;
+}
 .login-container {
   min-height: 100%;
   width: 100%;
