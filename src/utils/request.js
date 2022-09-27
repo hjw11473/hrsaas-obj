@@ -6,7 +6,7 @@ import { Message } from "element-ui"
 import store from '@/store'
 import router from "@/router"
 
-const TimeOut = 1
+const TimeOut = 3600
 // 对比时间是否超时
 function checkTimeout() {
   const currentTime = Date.now() // 时间2 接口调用的真正时间

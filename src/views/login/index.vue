@@ -102,6 +102,10 @@ export default {
         await this.$refs.loginForm.validate();
         this.loading = true;
         await this.$store.dispatch("user/loginAction",(this.loginFrom));
+        this.$message({
+          message: '登录成功',
+          type: 'success'
+        });
         this.$router.push("/");
       } catch (err) {
       } finally {

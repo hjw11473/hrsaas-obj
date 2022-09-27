@@ -15,7 +15,6 @@ Object.keys(directives).forEach(key => {
   Vue.directive(key, directives[key])
 })
 
-
 import App from './App'
 import store from './store'
 import router from './router'
