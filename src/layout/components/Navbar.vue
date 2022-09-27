@@ -19,8 +19,8 @@
               Home
             </el-dropdown-item>
           </router-link>
-          <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;" @click="btn">Log Out</span>
+          <el-dropdown-item divided @click.native="signout">
+            <span style="display:block;">Log Out</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -56,12 +56,13 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
-    async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-    },
-    btn() {
-      this.$store.state.commit('user/loginAction','')
+    // async logout() {
+    //   await this.$store.dispatch('user/logout')
+    //   this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    // },
+    signout() {
+      this.$store.dispatch('user/emptytoken')
+      this.$message('退出成功');
       this.$router.push('/login')
     }
   }

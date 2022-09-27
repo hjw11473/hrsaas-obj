@@ -15,12 +15,13 @@ const store = new Vuex.Store({
   },
   getters,
   plugins: [createPersistedState({
-    // paths: ['user.token']
-    reducer({ user: { token } }) {
-      return {
-        user: { token }
-      }
-    }
+    paths: ['user.token','user.tokenTime']
+    // reducer({ user: { token } }) {
+    //   return {
+    //     user: { token },
+    //     user: { tokenTime }
+    //   }
+    // }
   })]
 })
 
