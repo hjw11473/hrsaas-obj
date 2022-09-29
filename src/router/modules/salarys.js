@@ -6,7 +6,7 @@ export default {
     component: layout,
     children: [{
         path: '',
-        component: () => import(/* webpackChunkName:"dashboard" */'@/views/salarys'),
+        component: () => import('@/views/salarys'),
         meta: { title:'工资',icon:'money' }
     }]
 }

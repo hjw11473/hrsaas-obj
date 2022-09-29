@@ -6,7 +6,7 @@ export default {
     component: layout,
     children: [{
         path: '',
-        component: () => import(/* webpackChunkName:"dashboard" */ '@/views/approvals'),
+        component: () => import('@/views/approvals'),
         meta: { title:'审批', icon: 'tree-table' }
     }]
 }

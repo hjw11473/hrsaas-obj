@@ -8,13 +8,13 @@
 
 <script>
 export default {
-  name: 'AppMain',
+  name: "AppMain",
   computed: {
     key() {
-      return this.$route.path
-    }
-  }
-}
+      return this.$route.path;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -25,12 +25,12 @@ export default {
   position: relative;
   overflow: hidden;
 }
-.fixed-header+.app-main {
+.fixed-header + .app-main {
   padding-top: 50px;
 }
 </style>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // fix css style bug in open el-dialog
 .el-popup-parent--hidden {
   .fixed-header {

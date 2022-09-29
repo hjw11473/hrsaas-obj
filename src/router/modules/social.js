@@ -6,7 +6,7 @@ export default {
     component: layout,
     children: [{
         path: '',
-        component: () => import(/* webpackChunkName:"dashboard" */'@/views/social'),
+        component: () => import('@/views/social'),
         meta: { title:'社保',icon:'table' }
     }]
 }
