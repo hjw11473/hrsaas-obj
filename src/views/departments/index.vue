@@ -1,56 +1,83 @@
 <template>
-    <div class="app-container">
-        组织架构
-        <div class="collapse">
-            <el-collapse>
-                <el-collapse-item>
-                    <template slot="title">
-                        一致性 Consistency<i class="header-icon el-icon-info"></i>
-                    </template>
-                    <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-                    <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
-                </el-collapse-item>
-                <el-collapse-item title="反馈 Feedback">
-                    <div>控制反馈：通过界面样式和交互动效让用户可以清晰的感知自己的操作；</div>
-                    <div>页面反馈：操作后，通过页面元素的变化清晰地展现当前状态。</div>
-                </el-collapse-item>
-                <el-collapse-item title="效率 Efficiency">
-                    <div>简化流程：设计简洁直观的操作流程；</div>
-                    <div>清晰明确：语言表达清晰且表意明确，让用户快速理解进而作出决策；</div>
-                    <div>帮助用户识别：界面简单直白，让用户快速识别而非回忆，减少用户记忆负担。</div>
-                </el-collapse-item>
-                <el-collapse-item title="可控 Controllability">
-                    <div>用户决策：根据场景可给予用户操作建议或安全提示，但不能代替用户进行决策；</div>
-                    <div>结果可控：用户可以自由的进行操作，包括撤销、回退和终止当前操作等。</div>
-                </el-collapse-item>
-            </el-collapse>
-        </div>
-    </div>
+  <div class="departments-container" v-loading="loading">
+    <el-card>
+      <treeTools :tree-node="company" :is-root="false" @addDept="handleAddDept" />
+    </el-card>
+    <el-tree :expand-on-click-node="false" :data="departs" :props="defaultProps" :default-expand-all="true"
+      @node-click="handleNodeClick">
+      <treeTools slot-scope="{data}" :tree-node="data" @addDept="handleAddDept" @editDept="editDept"
+        @Refreshlist="getDepartments" />
+    </el-tree>
+    <adddept ref="addDpet" :dialog-visible.sync="dialogVisible" :tree-nodes="curerntNode"
+      @contextmenu="getDepartments" />
+  </div>
 </template>
 
 <script>
+import treeTools from './components/tree-tools.vue'
+import { getDepartmentsAPI } from '@/api'
+import { tranListToTreeData } from './components/tree'
+import adddept from './components/add-dept.vue'
 export default {
-    data() {
-        return {
+  label: 'HrsaasIndex',
+  components: { treeTools, adddept },
+  data() {
+    return {
+      company: {},
+      departs: [],
+      defaultProps: {
+        label: 'name'
+      },
+      dialogVisible: false,
+      curerntNode: {},
+      loading: false
+    }
+  },
 
-        };
+  created() {
+
+  },
+  mounted() {
+    this.getDepartments() // 调用自身的方法
+  },
+  methods: {
+    handleNodeClick(data) {
+      console.log(data)
     },
-
-    mounted() {
-
+    async getDepartments() {
+      try {
+        this.loading = true
+        const { depts, companyManage, companyName } = await getDepartmentsAPI()
+        console.log(depts);
+        this.departs = tranListToTreeData(depts, '')
+        this.company = { name: companyName, manager: companyManage, id: '' }
+      } finally {
+        this.loading = false
+      }
     },
-
-    methods: {
-
+    handleAddDept(treeNode) {
+      this.dialogVisible = true
+      this.curerntNode = treeNode
     },
-};
+    // 编辑按钮，字传父事件
+    editDept(item) {
+      this.dialogVisible = true
+      this.curerntNode = { ...item }
+      this.$refs.addDpet.formData = { ...item }
+    }
+  }
+}
 </script>
 
-<style lang="scss" scoped>
-.app-container {
-    padding: 20px;
-    .collapse{
-        
+<style lang="scss">
+.departments-container {
+  width: 900px;
+  margin: 20px auto;
+
+  .el-tree {
+    .el-tree-node__content {
+      padding-right: 20px;
     }
+  }
 }
 </style>

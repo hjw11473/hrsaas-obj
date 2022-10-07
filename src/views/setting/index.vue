@@ -84,6 +84,8 @@ export default {
       try {
         this.loading = true;
         const { rows, total } = await GetRole(this.page);
+        const res = await GetRole(this.page);
+        console.log(res);
         this.userlist = rows;
         this.total = total;
         if (total > 0 && rows.length === 0) {
