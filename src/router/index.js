@@ -9,7 +9,7 @@ import attendancesRouter from './modules/attendances'
 import salarysRouter from './modules/salarys'
 import settingRouter from './modules/setting'
 import socialRouter from './modules/social'
-const asyncRoutes = [employeesRouter,settingRouter,permissionRouter,socialRouter,approvalsRouter, attendancesRouter, salarysRouter,departmentsRouter]
+const asyncRoutes = [employeesRouter, settingRouter, permissionRouter, socialRouter, approvalsRouter, attendancesRouter, salarysRouter, departmentsRouter]
 
 
 Vue.use(Router)
@@ -66,14 +66,26 @@ export const constantRoutes = [
     }]
   },
   // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  { path: '*', redirect: '/404', hidden: true },
+  {
+    path: '/import',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '',
+        name: 'import',
+        component: () => import('@/views/import/index')
+      }
+    ]
+  },
 ]
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   // 临时合并所有的路由
-  routes: [...constantRoutes,...asyncRoutes]
+  routes: [...constantRoutes, ...asyncRoutes]
 })
 
 const router = createRouter()

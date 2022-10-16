@@ -10,7 +10,7 @@ router.beforeResolve(async(to, from, next) => {
     // 1.1存在处于登录状态是否去往登录页处于则去首页否则放行
     // 1.2不存在不处于登录状态是否处于白名单处于则放行否则登录页
     if (store.getters.token) {
-        console.log(store.state);
+        // console.log(store.state);
         if (!store.getters.userId) {
             await store.dispatch('user/UserInfoAPI')
         }
